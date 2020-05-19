@@ -1,3 +1,7 @@
+# Fork changes
+
+This fork uses the original random number algorithm from [randomColors.js](https://github.com/davidmerfield/randomColor), in particular, it adds the possibility to specify a seed in order to always get the same set of "random" colors
+
 # Random Color Swift
 
 Inspired by David Merfield's [randomColor.js](https://github.com/davidmerfield/randomColor). It is a ported version to Swift. You can use the library to generate attractive random colors on iOS or macOS.
