@@ -65,11 +65,23 @@ Generate a single random color with some conditions.
 
 - returns: A random color following input conditions. It will be a `UIColor` object for iOS target, and an `NSColor` object for OSX target.
 */
-public func randomColor(hue: Hue = .random, luminosity: Luminosity = .random) -> Color {
+public func randomColor(hue: Hue = .random, luminosity: Luminosity = .random, seed: Int? = nil) -> Color {
     
     func random(in range: Range) -> Int {
-        assert(range.max >= range.min, "Max in range should be greater than min")
-        return Int(arc4random_uniform(UInt32(range.max - range.min))) + range.min
+        if seed == nil {
+            let goldenRatio = 0.618033988749895
+            var r = Double.random(in: 0 ..< 1)
+            r += goldenRatio
+            r.formTruncatingRemainder(dividingBy: 1)
+            return floor(range.min + r * (range.max + 1 - range.min))
+        }
+        else {
+            let max = range.max != 0 ? range.max : 1
+            let min = range.min != 0 ? range.min : 0
+            seed = (seed! * 9301 + 49297 % 233280)
+            let rnd = Double(seed!) / 233280
+            return floor(min + rnd * (max - min))
+        }
     }
     
     func getColorDefinition(hueValue: Int) -> ColorDefinition {
@@ -199,10 +211,10 @@ Generate a set of random colors with some conditions.
 
 - returns: An array of random colors following input conditions. The elements will be `UIColor` objects for iOS target, and `NSColor` objects for OSX target.
 */
-public func randomColors(count: Int, hue: Hue = .random, luminosity: Luminosity = .random) -> [Color] {
+public func randomColors(count: Int, hue: Hue = .random, luminosity: Luminosity = .random, seed: Int? = nil) -> [Color] {
     var colors: [Color] = []
     while (colors.count < count) {
-        colors.append(randomColor(hue: hue, luminosity: luminosity))
+        colors.append(randomColor(hue: hue, luminosity: luminosity, seed: seed))
     }
     return colors
 }
